@@ -24,3 +24,10 @@ jobs:
 
     - name: Run tests
       run: npm test
+
+    - name: Send CI Data to Datadog
+      uses: DataDog/datadog-ci-actions@v1
+      with:
+        api-key: ${{ secrets.DD_API_KEY }}
+        site: datadoghq.com
+
