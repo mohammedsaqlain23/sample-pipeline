@@ -11,23 +11,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Install dependencies
-      run: npm install
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run tests
-      run: npm test
+      # Step 4: Run tests with coverage
+      - name: Run tests
+        run: |
+          npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=test-results/results.xml
+          npx nyc --reporter=lcov npm test
 
-    - name: Send CI Data to Datadog
-      uses: DataDog/datadog-ci-actions@v1
-      with:
-        api-key: ${{ secrets.DD_API_KEY }}
-        site: datadoghq.com
+      # Step 5: Upload test results to Datadog
+      - name: Upload CI Data to Datadog
+        run: |
+          npx datadog-ci ci-pipeline upload \
+            --api-key ${{ secrets.DD_API_KEY }} \
+            --site datadoghq.com \
+            --service "sample-pipeline" \
+            --repository "mohammedsaqlain23/sample-pipeline" \
+            --branch ${{ github.ref_name }} \
+            --commit-sha ${{ github.sha }} \
+            --ci-provider "github-actions"
+
+      # Optional Step 6: Upload code coverage (if using nyc/coverage)
+      - name: Upload Coverage to Datadog
+        run: |
+          npx datadog-ci code-coverage upload \
+            --api-key ${{ secrets.DD_API_KEY }} \
+            --service "sample-pipeline" \
+            --coverage-file "./coverage/lcov.info"
 
