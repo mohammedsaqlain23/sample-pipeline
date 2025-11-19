@@ -1,0 +1,23 @@
+{
+  "name": "sample-pipeline",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohammedsaqlain23/sample-pipeline.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohammedsaqlain23/sample-pipeline/issues"
+  },
+  "homepage": "https://github.com/mohammedsaqlain23/sample-pipeline#readme",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
